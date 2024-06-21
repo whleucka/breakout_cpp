@@ -1,25 +1,20 @@
 #pragma once
 
-struct Pos {
-  float x, y;
-};
+#include "globals.hpp"
+#include "circle.hpp"
+#include "player.hpp"
 
-struct Size {
-  float r;
-};
-
-struct Colour {
-  float r, g, b, a;
-};
-
-class Ball {
+class Ball : public Circle::Circle {
 public:
-  Ball(float posX, float posY, float radius, float red, float green, float blue, float alpha);
+  Ball(float posX, float posY, float radius, float red, float green, float blue,
+       float alpha, Window *window, Player *player);
   ~Ball();
-  void draw();
-
+  void move(double dt);
 private:
-  Pos *pos;
-  Size *size;
-  Colour *colour;
+  Window *window;
+  Player *player;
+  void detectWalls();
+  void detectPlayer();
+  float speed;
+  int dx,dy;
 };

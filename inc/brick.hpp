@@ -1,26 +1,10 @@
 #pragma once
 
-struct Pos {
-  float x, y;
-};
+#include "quad.hpp"
 
-struct Size {
-  float w, h;
-};
-
-struct Colour {
-  float r, g, b, a;
-};
-
-class Brick {
+class Brick : public Quad::Quad {
 public:
   Brick(float posX, float posY, float width, float height, float red,
         float green, float blue, float alpha);
   ~Brick();
-  void draw();
-
-private:
-  Pos *pos;
-  Size *size;
-  Colour *colour;
 };
