@@ -145,11 +145,12 @@ void Game::start() {
     int bricksExist = 0;
     for (auto brick : bricks) {
       if (brick->isAlive()) {
-        ++bricksExist;
+        bricksExist++;
       }
     }
     if (!bricksExist) {
-      ++level;
+      level++;
+      lives++;
       return start();
     }
 
