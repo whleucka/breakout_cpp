@@ -1,5 +1,5 @@
-# Crafty
-A hobby Minecraft clone programmed in C++
+# Breakout
+A hobby breakout clone written in C++
 
 
 ### Build
@@ -9,7 +9,7 @@ make
 
 ### Run
 ```
-./bin/crafty
+./bin/breakout
 ```
 
 ### License

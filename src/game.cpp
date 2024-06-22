@@ -22,11 +22,12 @@ Game::~Game() {
 }
 
 void Game::init() {
+  srand (time(NULL));
   score = level = 0;
-  lives = 3;
+  lives = 2;
   state = GameState::START;
 
-  window = new Window{30.0f, 800, 600, std::string("Breakout")};
+  window = new Window{30.0f, 1280, 720, std::string("Breakout")};
 
   checkInit(al_init(), "allegro");
 
@@ -59,17 +60,17 @@ void Game::checkInit(bool test, std::string description) {
 }
 
 void Game::loadLevel(int level) {
-  float width = 30.0f, height = 10.0f;
-  float startPosX = 10.0f, startPosY = 40.0f;
+  float width = 40.0f, height = 15.0f;
+  float startPosX = 0.0f, startPosY = 40.0f;
   int level_mod = floor(10 * level * 0.25);
 
   int columns = floor(window->width / width);
-  int rows = std::min(50, level_mod);
+  int rows = std::min(30, level_mod);
 
   for (auto j = 0; j < rows; ++j) {
     for (auto i = 0; i < columns; ++i) {
       Brick *brick = new Brick(startPosX + width * i, startPosY + height * j,
-                               width, height, 0.0f, 255.0f, 0.0f, 0.1f);
+                               width, height, 0.0f, 0.0f, 255.0f, 0.3f);
       bricks.push_back(brick);
     }
   }
