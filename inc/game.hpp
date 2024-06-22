@@ -36,13 +36,13 @@ private:
   ALLEGRO_FONT *font;
   std::string formatScore();
   void displayScore();
-  int score, level;
+  int score, level, lives;
   void start();
   void end();
   void init();
   void checkInit(bool test, std::string description);
   void setupGame();
+  void loadLevel(int level);
   void move(double dt);
   void draw();
-  void loadLevel();
 };

@@ -5,9 +5,9 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
+#include <math.h>
 #include <print>
 #include <string>
-#include <math.h>
 
 Game::Game() { init(); }
 
@@ -22,6 +22,8 @@ Game::~Game() {
 }
 
 void Game::init() {
+  score = level = 0;
+  lives = 3;
   state = GameState::START;
 
   window = new Window{30.0f, 800, 600, std::string("Breakout")};
@@ -56,43 +58,44 @@ void Game::checkInit(bool test, std::string description) {
   }
 }
 
-void Game::loadLevel() {
+void Game::loadLevel(int level) {
   float width = 30.0f, height = 10.0f;
   float startPosX = 10.0f, startPosY = 40.0f;
-  int level_mod = floor(5 * level / 2);
+  int level_mod = floor(10 * level * 0.25);
 
   int columns = floor(window->width / width);
   int rows = std::min(50, level_mod);
 
   for (auto j = 0; j < rows; ++j) {
     for (auto i = 0; i < columns; ++i) {
-      Brick *brick = new Brick(startPosX + width * i , startPosY + height * j, width, height, 0.0f, 255.0f, 0.0f, 0.5f);
+      Brick *brick = new Brick(startPosX + width * i, startPosY + height * j,
+                               width, height, 0.0f, 255.0f, 0.0f, 0.1f);
       bricks.push_back(brick);
     }
   }
 }
 
 void Game::displayScore() {
-  al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, formatScore().c_str());
+  al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0,
+               formatScore().c_str());
 }
 
 void Game::setupGame() {
-  score = 0;
-  level = 1;
-  player = new Player((window->width / 2.0f) - 50.0f, window->height - 50,
+  loadLevel(level);
+  player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
                       100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
-  ball = new Ball((window->width / 2.0f) - 50.0f, window->height - 100, 5.0f,
-                  255.0f, 255.0f, 255.0f, 1.0f, window, player);
-  loadLevel();
+  ball = new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
+                  255.0f, 255.0f, 255.0f, 1.0f, window, player, bricks, &score);
 }
 
 std::string Game::formatScore() {
-  return std::format("Level: {} : Score: {}", std::to_string(level), std::to_string(score));
+  return std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level),
+                     std::to_string(lives), std::to_string(score));
 }
 
 /**
-* @param double dt delta time
-*/
+ * @param double dt delta time
+ */
 void Game::move(double dt) {
   ball->move(dt);
   player->move(dt);
@@ -102,8 +105,9 @@ void Game::draw() {
   al_clear_to_color(al_map_rgb(0, 0, 0));
   displayScore();
 
-  for (auto brick: bricks) {
-    brick->draw();
+  for (auto brick : bricks) {
+    if (brick->isAlive())
+      brick->draw();
   }
 
   ball->draw();
@@ -129,6 +133,26 @@ void Game::start() {
   for (;;) {
     al_wait_for_event(queue, &event);
 
+    // Oof
+    if (!ball->isAlive()) {
+      if (lives-- <= 0) {
+        std::println("Game over! Score: {}", std::to_string(score));
+        done = true;
+      }
+      ball->reset();
+    }
+
+    int bricksExist = 0;
+    for (auto brick : bricks) {
+      if (brick->isAlive()) {
+        ++bricksExist;
+      }
+    }
+    if (!bricksExist) {
+      ++level;
+      return start();
+    }
+
     switch (event.type) {
     case ALLEGRO_EVENT_TIMER:
       current_time = al_get_time();
@@ -150,11 +174,19 @@ void Game::start() {
       }
 
       // Change player direction
-      if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+      switch (event.keyboard.keycode) {
+      case ALLEGRO_KEY_H:
+      case ALLEGRO_KEY_A:
+      case ALLEGRO_KEY_LEFT:
         player->keyboard(-1);
-      } else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+        break;
+      case ALLEGRO_KEY_L:
+      case ALLEGRO_KEY_D:
+      case ALLEGRO_KEY_RIGHT:
         player->keyboard(1);
+        break;
       }
+
       break;
     case ALLEGRO_EVENT_KEY_UP:
       // Player movement stops
@@ -178,19 +210,18 @@ void Game::start() {
   }
 }
 
-void Game::end() {
-}
+void Game::end() {}
 
 int Game::run() {
   switch (state) {
-    case GameState::MENU:
+  case GameState::MENU:
     break;
-    case GameState::START:
-      start();
+  case GameState::START:
+    start();
     break;
-    case GameState::PAUSE:
+  case GameState::PAUSE:
     break;
-    case GameState::GAME_OVER:
+  case GameState::GAME_OVER:
     break;
   }
   return 0;
