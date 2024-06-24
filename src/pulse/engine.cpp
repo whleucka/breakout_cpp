@@ -61,6 +61,7 @@ void Engine::draw() {
 }
 
 void Engine::loop() {
+  setupGame();
   bool done = false;
   bool redraw = true;
   ALLEGRO_EVENT event;

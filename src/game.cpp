@@ -14,7 +14,6 @@ int Game::entryPoint() {
   level = 1;
   lives = 2;
   loadLevel(level);
-  setupGame();
   return Engine::run();
 }
 
