@@ -12,13 +12,13 @@
 Game::Game() { init(); }
 
 Game::~Game() {
+  delete player;
+  delete ball;
+  delete window;
   al_destroy_font(font);
   al_destroy_display(disp);
   al_destroy_timer(timer);
   al_destroy_event_queue(queue);
-  delete player;
-  delete ball;
-  delete window;
 }
 
 void Game::init() {
@@ -27,7 +27,7 @@ void Game::init() {
   lives = 2;
   state = GameState::START;
 
-  window = new Window{30.0f, 1280, 720, std::string("Breakout")};
+  window = new Window;
 
   checkInit(al_init(), "allegro");
 
@@ -86,7 +86,7 @@ void Game::setupGame() {
   player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
                       100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
   ball = new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
-                  255.0f, 255.0f, 255.0f, 1.0f, window, player, bricks, &score);
+                  255.0f, 255.0f, 255.0f, 1.0f, window, player, &bricks, &score);
 }
 
 std::string Game::formatScore() {

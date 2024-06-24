@@ -7,10 +7,10 @@
 
 #include <vector>
 
-class Ball : public Circle::Circle {
+class Ball : public Pulse::Circle {
 public:
   Ball(float posX, float posY, float radius, float red, float green, float blue,
-       float alpha, Window *window, Player *player, std::vector<Brick *> bricks,
+       float alpha, Window *window, Player *player, std::vector<Brick *> *bricks,
        int *score);
   ~Ball();
   void move(double dt);
@@ -18,9 +18,9 @@ public:
   bool isAlive() { return alive; }
 
 private:
-  Window *window;
-  Player *player;
-  std::vector<Brick *> bricks;
+  const Window *window;
+  const Player *player;
+  const std::vector<Brick *> *bricks;
   void detectWalls();
   void detectPlayer();
   void detectBricks();

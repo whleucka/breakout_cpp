@@ -1,18 +1,8 @@
 #pragma once
 
-namespace Circle {
-  struct Pos {
-    float x, y;
-  };
+#include "globals.hpp"
 
-  struct Dim {
-    float r;
-  };
-
-  struct Colour {
-    float r, g, b, a;
-  };
-
+namespace Pulse {
   class Circle {
   public:
     Circle(float posX, float posY, float radius, float red, float green,

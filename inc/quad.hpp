@@ -1,18 +1,8 @@
 #pragma once
 
-namespace Quad {
-struct Pos {
-  float x, y;
-};
+#include "globals.hpp"
 
-struct Dim {
-  float w, h;
-};
-
-struct Colour {
-  float r, g, b, a;
-};
-
+namespace Pulse {
 class Quad {
 public:
   Quad(float posX, float posY, float width, float height, float red,
