@@ -1,6 +1,6 @@
 #pragma once
 
-#include "globals.hpp"
+#include "structs.hpp"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 
@@ -9,7 +9,6 @@ enum GameState {
   LOADING = 0,
   MENU,
   START,
-  PAUSE,
   GAME_OVER,
 };
 
@@ -25,6 +24,7 @@ protected:
   ALLEGRO_EVENT_QUEUE *queue;
   ALLEGRO_DISPLAY *disp;
   ALLEGRO_FONT *font;
+  bool done = false, pause = false;
 
   // Init and setup game
   virtual void init();
@@ -42,8 +42,7 @@ protected:
   // Game state methods
   virtual void loading() {};
   virtual void menu() {};
-  virtual void pause() {};
-  virtual void gameOver() {};
+  virtual void gameOver() { done = true; };
 
 private:
   int state;

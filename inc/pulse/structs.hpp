@@ -5,7 +5,7 @@
 struct Window {
   float fps = 30.0f;
   int width = 1280, height = 720;
-  std::string title = "Breakout";
+  std::string title;
 };
 
 struct Colour {

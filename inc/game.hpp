@@ -25,6 +25,7 @@ private:
   void displayScore();
 
   void setupGame() override;
+  void gameOver() override;
 
   void move(double dt) override;
   void render() override;

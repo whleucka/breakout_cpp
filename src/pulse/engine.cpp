@@ -8,7 +8,11 @@
 #include <string>
 
 namespace Pulse {
-Engine::Engine() { init(); }
+Engine::Engine() {
+  state = GameState::START;
+  window = new Window;
+  init();
+}
 
 Engine::~Engine() {
   delete window;
@@ -19,9 +23,6 @@ Engine::~Engine() {
 }
 
 void Engine::init() {
-  state = GameState::START;
-  window = new Window;
-
   checkInit(al_init(), "allegro");
 
   checkInit(al_install_keyboard(), "keyboard");
@@ -33,6 +34,7 @@ void Engine::init() {
   checkInit(queue, "queue");
 
   disp = al_create_display(window->width, window->height);
+  al_set_window_title(disp, window->title.c_str());
   checkInit(disp, "display");
 
   font = al_create_builtin_font();
@@ -62,7 +64,6 @@ void Engine::draw() {
 
 void Engine::loop() {
   setupGame();
-  bool done = false;
   bool redraw = true;
   ALLEGRO_EVENT event;
 
@@ -87,13 +88,18 @@ void Engine::loop() {
       previous_time = current_time;
 
       // Move stuff 🚀
-      move(dt);
+      if (!pause) {
+        move(dt);
+      }
 
       redraw = true;
       break;
 
     case ALLEGRO_EVENT_KEY_DOWN:
-      keydown(event.keyboard.keycode);
+      if (event.keyboard.keycode == ALLEGRO_KEY_PAUSE)
+        pause = !pause;
+      else
+        keydown(event.keyboard.keycode);
       break;
     case ALLEGRO_EVENT_KEY_UP:
       keyup(event.keyboard.keycode);
@@ -126,9 +132,6 @@ int Engine::run() {
     break;
   case GameState::START:
     loop();
-    break;
-  case GameState::PAUSE:
-    pause();
     break;
   case GameState::GAME_OVER:
     gameOver();

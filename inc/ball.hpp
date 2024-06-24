@@ -1,9 +1,9 @@
 #pragma once
 
 #include "brick.hpp"
-#include "globals.hpp"
 #include "player.hpp"
 #include "pulse/circle.hpp"
+#include "pulse/structs.hpp"
 
 #include <vector>
 

@@ -1,7 +1,6 @@
 #include "game.hpp"
 #include "math.h"
 #include <allegro5/allegro_font.h>
-#include <format>
 #include <print>
 
 Game::~Game() {
@@ -41,6 +40,7 @@ void Game::displayScore() {
 
 void Game::setupGame() {
   Engine::setupGame();
+  window->title = "Breakout CPP";
   player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
                       100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
   ball =
@@ -75,11 +75,11 @@ void Game::render() {
 
 void Game::tick() {
   Engine::tick();
+
   // Oof
   if (!ball->isAlive()) {
     if (lives-- <= 0) {
-      std::println("Game over! Score: {}", std::to_string(score));
-      // FIXME: we need to exit here
+      gameOver();
     }
     ball->reset();
   }
@@ -93,7 +93,8 @@ void Game::tick() {
   if (!bricksExist) {
     level++;
     lives++;
-    // FIXME: this should go to next level and restart gameplay
+    ball->reset();
+    loadLevel(level);
   }
 }
 
@@ -113,3 +114,8 @@ void Game::keydown(int type) {
 }
 
 void Game::keyup(int /*type*/) { player->keyboard(0); }
+
+void Game::gameOver() {
+  Engine::gameOver();
+  std::println("Game over! Score: {}", std::to_string(score));
+}
