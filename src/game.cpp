@@ -1,62 +1,21 @@
 #include "game.hpp"
-#include "player.hpp"
-
-#include <algorithm>
-#include <allegro5/allegro5.h>
+#include "math.h"
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_primitives.h>
-#include <math.h>
+#include <format>
 #include <print>
-#include <string>
-
-Game::Game() { init(); }
 
 Game::~Game() {
   delete player;
   delete ball;
-  delete window;
-  al_destroy_font(font);
-  al_destroy_display(disp);
-  al_destroy_timer(timer);
-  al_destroy_event_queue(queue);
 }
 
-void Game::init() {
-  srand (time(NULL));
-  score = level = 0;
+int Game::entryPoint() {
+  score = 0;
+  level = 1;
   lives = 2;
-  state = GameState::START;
-
-  window = new Window;
-
-  checkInit(al_init(), "allegro");
-
-  checkInit(al_install_keyboard(), "keyboard");
-
-  timer = al_create_timer(1.0 / window->fps);
-  checkInit(timer, "timer");
-
-  queue = al_create_event_queue();
-  checkInit(queue, "queue");
-
-  disp = al_create_display(window->width, window->height);
-  checkInit(disp, "display");
-
-  font = al_create_builtin_font();
-  checkInit(font, "font");
-
-  checkInit(al_init_primitives_addon(), "primitives");
-
-  al_register_event_source(queue, al_get_keyboard_event_source());
-  al_register_event_source(queue, al_get_display_event_source(disp));
-  al_register_event_source(queue, al_get_timer_event_source(timer));
-}
-
-void Game::checkInit(bool test, std::string description) {
-  if (!test) {
-    std::println("Failed to initialze {}", description);
-    std::exit(1);
-  }
+  loadLevel(level);
+  setupGame();
+  return Engine::run();
 }
 
 void Game::loadLevel(int level) {
@@ -82,11 +41,12 @@ void Game::displayScore() {
 }
 
 void Game::setupGame() {
-  loadLevel(level);
+  Engine::setupGame();
   player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
                       100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
-  ball = new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
-                  255.0f, 255.0f, 255.0f, 1.0f, window, player, &bricks, &score);
+  ball =
+      new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
+               255.0f, 255.0f, 255.0f, 1.0f, window, player, &bricks, &score);
 }
 
 std::string Game::formatScore() {
@@ -102,8 +62,7 @@ void Game::move(double dt) {
   player->move(dt);
 }
 
-void Game::draw() {
-  al_clear_to_color(al_map_rgb(0, 0, 0));
+void Game::render() {
   displayScore();
 
   for (auto brick : bricks) {
@@ -113,118 +72,45 @@ void Game::draw() {
 
   ball->draw();
   player->draw();
-
-  al_flip_display();
 }
 
-void Game::start() {
-  setupGame();
-
-  bool done = false;
-  bool redraw = true;
-  ALLEGRO_EVENT event;
-
-  al_start_timer(timer);
-
-  double previous_time = al_get_time();
-  double current_time;
-  double dt; // delta time
-
-  // The game loop
-  for (;;) {
-    al_wait_for_event(queue, &event);
-
-    // Oof
-    if (!ball->isAlive()) {
-      if (lives-- <= 0) {
-        std::println("Game over! Score: {}", std::to_string(score));
-        done = true;
-      }
-      ball->reset();
+void Game::tick() {
+  Engine::tick();
+  // Oof
+  if (!ball->isAlive()) {
+    if (lives-- <= 0) {
+      std::println("Game over! Score: {}", std::to_string(score));
+      // FIXME: we need to exit here
     }
+    ball->reset();
+  }
 
-    int bricksExist = 0;
-    for (auto brick : bricks) {
-      if (brick->isAlive()) {
-        bricksExist++;
-      }
+  int bricksExist = 0;
+  for (auto brick : bricks) {
+    if (brick->isAlive()) {
+      bricksExist++;
     }
-    if (!bricksExist) {
-      level++;
-      lives++;
-      return start();
-    }
-
-    switch (event.type) {
-    case ALLEGRO_EVENT_TIMER:
-      current_time = al_get_time();
-
-      // Delta time (how much time passed between buffers)
-      dt = current_time - previous_time;
-      previous_time = current_time;
-
-      // Move stuff 🚀
-      move(dt);
-
-      redraw = true;
-      break;
-
-    case ALLEGRO_EVENT_KEY_DOWN:
-      // Exit application
-      if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-        done = true;
-      }
-
-      // Change player direction
-      switch (event.keyboard.keycode) {
-      case ALLEGRO_KEY_H:
-      case ALLEGRO_KEY_A:
-      case ALLEGRO_KEY_LEFT:
-        player->keyboard(-1);
-        break;
-      case ALLEGRO_KEY_L:
-      case ALLEGRO_KEY_D:
-      case ALLEGRO_KEY_RIGHT:
-        player->keyboard(1);
-        break;
-      }
-
-      break;
-    case ALLEGRO_EVENT_KEY_UP:
-      // Player movement stops
-      player->keyboard(0);
-      break;
-    case ALLEGRO_EVENT_DISPLAY_CLOSE:
-      done = true;
-      break;
-    }
-
-    // Exit game start loop
-    if (done)
-      break;
-
-    if (redraw && al_is_event_queue_empty(queue)) {
-      // Drawing stuff 🎨
-      draw();
-
-      redraw = false;
-    }
+  }
+  if (!bricksExist) {
+    level++;
+    lives++;
+    // FIXME: this should go to next level and restart gameplay
   }
 }
 
-void Game::end() {}
-
-int Game::run() {
-  switch (state) {
-  case GameState::MENU:
+void Game::keydown(int type) {
+  switch (type) {
+  case ALLEGRO_KEY_H:
+  case ALLEGRO_KEY_A:
+  case ALLEGRO_KEY_LEFT:
+    player->keyboard(-1);
     break;
-  case GameState::START:
-    start();
-    break;
-  case GameState::PAUSE:
-    break;
-  case GameState::GAME_OVER:
+  case ALLEGRO_KEY_L:
+  case ALLEGRO_KEY_D:
+  case ALLEGRO_KEY_RIGHT:
+    player->keyboard(1);
     break;
   }
-  return 0;
 }
+
+void Game::keyup(int /*type*/) { player->keyboard(0); }

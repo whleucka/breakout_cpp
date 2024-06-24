@@ -1,17 +1,17 @@
 #pragma once
 
 #include "brick.hpp"
-#include "circle.hpp"
 #include "globals.hpp"
 #include "player.hpp"
+#include "pulse/circle.hpp"
 
 #include <vector>
 
 class Ball : public Pulse::Circle {
 public:
   Ball(float posX, float posY, float radius, float red, float green, float blue,
-       float alpha, Window *window, Player *player, std::vector<Brick *> *bricks,
-       int *score);
+       float alpha, Window *window, Player *player,
+       std::vector<Brick *> *bricks, unsigned int *score);
   ~Ball();
   void move(double dt);
   void reset();
@@ -26,6 +26,6 @@ private:
   void detectBricks();
   float speed;
   int dx, dy;
-  int *score;
+  unsigned int *score;
   bool alive;
 };

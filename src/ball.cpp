@@ -3,7 +3,7 @@
 
 Ball::Ball(float posX, float posY, float radius, float red, float green,
            float blue, float alpha, Window *window, Player *player,
-           std::vector<Brick *> *bricks, int *score)
+           std::vector<Brick *> *bricks, unsigned int *score)
   : Pulse::Circle(posX, posY, radius, red, green, blue, alpha),
   window(window), player(player), bricks(bricks), score(score), alive(true) {
   speed = 300.0f;

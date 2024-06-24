@@ -2,5 +2,5 @@
 
 int main() {
   Game game = Game();
-  return game.run();
+  return game.entryPoint();
 }

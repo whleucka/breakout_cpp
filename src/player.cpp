@@ -11,9 +11,7 @@ Player::Player(float posX, float posY, float width, float height, float red,
 
 Player::~Player() {}
 
-void Player::keyboard(int _dx) {
-  dx = _dx;
-}
+void Player::keyboard(int _dx) { dx = _dx; }
 
 void Player::move(double dt) {
   if (pos->x < 0) {
