@@ -22,6 +22,8 @@ private:
 
   std::string formatScore();
   void loadLevel(int level);
+  void nextLevel();
+  bool checkEndLevel();
   void displayScore();
 
   void setupGame() override;

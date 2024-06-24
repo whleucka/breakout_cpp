@@ -17,6 +17,7 @@ int Game::entryPoint() {
 }
 
 void Game::loadLevel(int level) {
+  // TODO: load levels from files
   float width = 40.0f, height = 15.0f;
   float startPosX = 0.0f, startPosY = 40.0f;
   int level_mod = floor(10 * level * 0.25);
@@ -84,17 +85,9 @@ void Game::tick() {
     ball->reset();
   }
 
-  int bricksExist = 0;
-  for (auto brick : bricks) {
-    if (brick->isAlive()) {
-      bricksExist++;
-    }
-  }
-  if (!bricksExist) {
-    level++;
-    lives++;
-    ball->reset();
-    loadLevel(level);
+  // Next level?
+  if (checkEndLevel()) {
+    nextLevel();
   }
 }
 
@@ -118,4 +111,21 @@ void Game::keyup(int /*type*/) { player->keyboard(0); }
 void Game::gameOver() {
   Engine::gameOver();
   std::println("Game over! Score: {}", std::to_string(score));
+}
+
+void Game::nextLevel() {
+  level++;
+  lives++;
+  ball->reset();
+  loadLevel(level);
+}
+
+bool Game::checkEndLevel() {
+  int bricksExist = 0;
+  for (auto brick : bricks) {
+    if (brick->isAlive()) {
+      bricksExist++;
+    }
+  }
+  return bricksExist == 0;
 }
