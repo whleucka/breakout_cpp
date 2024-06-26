@@ -6,7 +6,7 @@ CC          := g++
 # The Target Binary Program
 TARGET      := breakout
 
-#The Directories, Source, Includes, Objects, Binary and Resources
+# The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
 BUILDDIR    := obj
@@ -16,20 +16,25 @@ SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o
 
-#Flags, Libraries and Includes
+# Flags, Libraries and Includes
 CFLAGS      := -std=c++23 -Wall -Wextra -g
+CFLAGS_BUILD := -std=c++23
 LIB         := -lallegro -lallegro_main -lallegro_font -lallegro_ttf -lallegro_primitives -lallegro_image -lallegro_audio -lallegro_acodec
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
 
 #---------------------------------------------------------------------------------
-#DO NOT EDIT BELOW THIS LINE
+# DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 # Default Make
 all: resources $(TARGET)
+
+# Build without extra flags
+build: CFLAGS=$(CFLAGS_BUILD)
+build: resources $(TARGET)
 
 # Remake
 remake: cleaner all
@@ -68,5 +73,5 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
-#Non-File Targets
-.PHONY: all remake clean cleaner resources
+# Non-File Targets
+.PHONY: all build remake clean cleaner resources

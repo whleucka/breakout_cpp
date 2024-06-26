@@ -3,6 +3,7 @@
 #include "ball.hpp"
 #include "brick.hpp"
 #include "player.hpp"
+#include "bricks.hpp"
 #include "pulse/engine.hpp"
 
 #include <string>
@@ -18,12 +19,11 @@ private:
   unsigned int score, level, lives;
   Player *player;
   Ball *ball;
-  std::vector<Brick *> bricks;
+  Bricks *bricks;
 
   std::string formatScore();
-  void loadLevel(int level);
   void nextLevel();
-  bool checkEndLevel();
+  bool checkEndLevel(const std::vector<Brick *> &bricks);
   void displayScore();
 
   void setupGame() override;

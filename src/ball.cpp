@@ -3,7 +3,7 @@
 
 Ball::Ball(float posX, float posY, float radius, float red, float green,
            float blue, float alpha, Window *window, Player *player,
-           std::vector<Brick *> *bricks, unsigned int *score)
+           Bricks *bricks, unsigned int *score)
   : Pulse::Circle(posX, posY, radius, red, green, blue, alpha),
   window(window), player(player), bricks(bricks), score(score), alive(true) {
   speed = 300.0f;
@@ -42,7 +42,7 @@ void Ball::detectPlayer() {
 }
 
 void Ball::detectBricks() {
-  for (auto brick : * bricks) {
+  for (auto brick : bricks->getBricks()) {
     if (!brick->isAlive())
       continue;
     float posX = dx == 1 ? pos->x + dim->r : pos->x - dim->r;

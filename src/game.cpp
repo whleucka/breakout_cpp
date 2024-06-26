@@ -6,32 +6,14 @@
 Game::~Game() {
   delete player;
   delete ball;
+  delete bricks;
 }
 
 int Game::entryPoint() {
   score = 0;
   level = 1;
   lives = 2;
-  loadLevel(level);
   return Engine::run();
-}
-
-void Game::loadLevel(int level) {
-  // TODO: load levels from files
-  float width = 40.0f, height = 15.0f;
-  float startPosX = 0.0f, startPosY = 40.0f;
-  int level_mod = floor(10 * level * 0.25);
-
-  int columns = floor(window->width / width);
-  int rows = std::min(30, level_mod);
-
-  for (auto j = 0; j < rows; ++j) {
-    for (auto i = 0; i < columns; ++i) {
-      Brick *brick = new Brick(startPosX + width * i, startPosY + height * j,
-                               width, height, 0.0f, 0.0f, 255.0f, 0.3f);
-      bricks.push_back(brick);
-    }
-  }
 }
 
 void Game::displayScore() {
@@ -42,11 +24,15 @@ void Game::displayScore() {
 void Game::setupGame() {
   Engine::setupGame();
   window->title = "Breakout CPP";
+
+  bricks = new Bricks(window);
+  bricks->loadLevel(level);
+
   player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
                       100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
   ball =
       new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
-               255.0f, 255.0f, 255.0f, 1.0f, window, player, &bricks, &score);
+               255.0f, 255.0f, 255.0f, 1.0f, window, player, bricks, &score);
 }
 
 std::string Game::formatScore() {
@@ -65,11 +51,8 @@ void Game::move(double dt) {
 void Game::render() {
   displayScore();
 
-  for (auto brick : bricks) {
-    if (brick->isAlive())
-      brick->draw();
-  }
 
+  bricks->draw();
   ball->draw();
   player->draw();
 }
@@ -86,7 +69,7 @@ void Game::tick() {
   }
 
   // Next level?
-  if (checkEndLevel()) {
+  if (bricks->cleared()) {
     nextLevel();
   }
 }
@@ -117,15 +100,5 @@ void Game::nextLevel() {
   level++;
   lives++;
   ball->reset();
-  loadLevel(level);
-}
-
-bool Game::checkEndLevel() {
-  int bricksExist = 0;
-  for (auto brick : bricks) {
-    if (brick->isAlive()) {
-      bricksExist++;
-    }
-  }
-  return bricksExist == 0;
+  bricks->loadLevel(level);
 }
