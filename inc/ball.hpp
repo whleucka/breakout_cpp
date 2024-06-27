@@ -3,8 +3,9 @@
 #include "brick.hpp"
 #include "bricks.hpp"
 #include "player.hpp"
-#include "pulse/circle.hpp"
-#include "pulse/structs.hpp"
+
+#include <pulse/circle.hpp>
+#include <pulse/structs.hpp>
 
 class Ball : public Pulse::Circle {
 public:

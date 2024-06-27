@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pulse/quad.hpp"
+#include <pulse/quad.hpp>
 
 class Brick : public Pulse::Quad {
 public:

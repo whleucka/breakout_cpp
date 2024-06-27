@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pulse/quad.hpp"
-#include "pulse/structs.hpp"
+#include <pulse/quad.hpp>
+#include <pulse/structs.hpp>
 #include <allegro5/allegro5.h>
 
 class Player : public Pulse::Quad {
