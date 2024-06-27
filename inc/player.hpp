@@ -13,7 +13,7 @@ public:
   void keyboard(int _dx);
 
 private:
-  Window *window;
+  const Window *window;
   float speed;
   int dx;
 };
