@@ -1,13 +1,11 @@
 #pragma once
 
 #include "ball.hpp"
-#include "brick.hpp"
 #include "player.hpp"
 #include "bricks.hpp"
 #include "pulse/engine.hpp"
 
 #include <string>
-#include <vector>
 
 class Game : public Pulse::Engine {
 public:
@@ -23,7 +21,6 @@ private:
 
   std::string formatScore() const;
   void nextLevel();
-  bool checkEndLevel(const std::vector<Brick *> &bricks);
   void displayScore() const;
 
   void setupGame() override;
