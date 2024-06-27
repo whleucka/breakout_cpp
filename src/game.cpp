@@ -1,7 +1,9 @@
 #include "game.hpp"
 #include "math.h"
-#include <allegro5/allegro_font.h>
+#include <format>
 #include <print>
+#include <string>
+#include <allegro5/allegro_font.h>
 
 Game::~Game() {
   delete player;
@@ -17,8 +19,8 @@ int Game::entryPoint() {
 }
 
 void Game::displayScore() const {
-  al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0,
-               formatScore().c_str());
+  std::string frmt = std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level), std::to_string(lives), std::to_string(score));
+  al_draw_text(font, al_map_rgb(255.0f, 255.0f, 255.f), 10.0f, 10.0f, 0, frmt.c_str());
 }
 
 void Game::setupGame() {
@@ -29,15 +31,10 @@ void Game::setupGame() {
   bricks->loadLevel(level);
 
   player = new Player((window->width / 2.0f) - 50.0f, window->height - 25,
-                      100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, window);
-  ball =
-      new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
-               255.0f, 255.0f, 255.0f, 1.0f, window, player, bricks, &score);
-}
-
-std::string Game::formatScore() const {
-  return std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level),
-                     std::to_string(lives), std::to_string(score));
+                      100.0f, 10.0f, 255.0f, 0.0f, 0.0f, 1.0f, true, window);
+  ball = new Ball((window->width / 2.0f) - 50.0f, window->height - 40.0f, 5.0f,
+                  255.0f, 255.0f, 255.0f, 1.0f, true, window, player, bricks,
+                  &score);
 }
 
 /**
@@ -50,8 +47,6 @@ void Game::move(double dt) {
 
 void Game::render() const {
   displayScore();
-
-
   bricks->draw();
   ball->draw();
   player->draw();

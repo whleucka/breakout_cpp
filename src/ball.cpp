@@ -2,9 +2,9 @@
 #include <print>
 
 Ball::Ball(float posX, float posY, float radius, float red, float green,
-           float blue, float alpha, Window *window, Player *player,
+           float blue, float alpha, bool solid, Window *window, Player *player,
            Bricks *bricks, unsigned int *score)
-    : Pulse::Circle(posX, posY, radius, red, green, blue, alpha),
+    : Pulse::Circle(posX, posY, radius, red, green, blue, alpha, solid),
       window(window), player(player), bricks(bricks), score(score),
       alive(true) {
   speed = 300.0f;
@@ -37,7 +37,7 @@ void Ball::detectPlayer() {
     float posY = pos->y + dim->r;
 
     if (isPlayerCollision(player, posX, posY)) {
-        dy = -1;
+      dy = -1;
     }
   }
 }

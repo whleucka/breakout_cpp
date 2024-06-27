@@ -9,7 +9,7 @@
 class Ball : public Pulse::Circle {
 public:
   Ball(float posX, float posY, float radius, float red, float green, float blue,
-       float alpha, Window *window, Player *player,
+       float alpha, bool solid, Window *window, Player *player,
        Bricks *bricks, unsigned int *score);
   ~Ball();
   void move(double dt);

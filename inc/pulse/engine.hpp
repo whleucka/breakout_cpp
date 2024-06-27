@@ -5,6 +5,7 @@
 #include <allegro5/allegro_font.h>
 
 namespace Pulse {
+
 enum GameState {
   LOADING = 0,
   MENU,
@@ -50,4 +51,5 @@ private:
   void loop();
   void draw() const;
 };
+
 } // namespace Pulse

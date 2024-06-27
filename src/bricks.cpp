@@ -17,7 +17,7 @@ void Bricks::loadLevel(int level) {
   for (auto j = 0; j < rows; ++j) {
     for (auto i = 0; i < columns; ++i) {
       Brick *brick = new Brick(startPosX + width * i, startPosY + height * j,
-                               width, height, 0.0f, 0.0f, 255.0f, 0.3f);
+                               width, height, 0.0f, 0.0f, 255.0f, 1.0f, false);
       bricks.push_back(brick);
     }
   }

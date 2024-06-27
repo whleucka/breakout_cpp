@@ -1,9 +1,8 @@
 #include "player.hpp"
-#include <print>
 
 Player::Player(float posX, float posY, float width, float height, float red,
-               float green, float blue, float alpha, Window *window)
-    : Quad::Quad(posX, posY, width, height, red, green, blue, alpha, true),
+               float green, float blue, float alpha, bool solid, Window *window)
+    : Quad::Quad(posX, posY, width, height, red, green, blue, alpha, solid),
       window(window) {
   speed = 500.0f;
   dx = 0;
