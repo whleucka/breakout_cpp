@@ -1,15 +1,15 @@
 #pragma once
 
 #include "ball.hpp"
-#include "player.hpp"
 #include "bricks.hpp"
+#include "player.hpp"
 #include "pulse/engine.hpp"
 
 #include <string>
 
 class Game : public Pulse::Engine {
 public:
-  Game(): Engine() {};
+  Game() : Engine(){};
   ~Game();
   int entryPoint();
 
@@ -21,7 +21,7 @@ private:
 
   std::string formatScore() const;
   void nextLevel();
-  void displayScore() const;
+  void displayScoreboard() const;
 
   void setupGame() override;
   void gameOver() override;

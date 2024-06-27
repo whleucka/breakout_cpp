@@ -3,22 +3,23 @@
 #include "structs.hpp"
 
 #include <allegro5/allegro_font.h>
+#include <string>
 
 namespace Pulse {
 
 class Text {
 public:
   Text() = default;
-  Text(ALLEGRO_FONT *font, char *text, float x = 10.0f, float y = 10.0f,
+  Text(std::string body, ALLEGRO_FONT *font, float x = 10.0f, float y = 10.0f,
        float r = 255.0f, float g = 255.0f, float b = 255.0f, float a = 1.0f);
   virtual ~Text();
-  char *text;
-  ALLEGRO_FONT *font;
   Pos *pos;
   Colour *colour;
+  virtual void draw() const;
 
 private:
-  virtual void draw() const;
+  std::string body;
+  ALLEGRO_FONT *font;
 };
 
 } // namespace Pulse

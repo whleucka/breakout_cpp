@@ -1,9 +1,9 @@
 #include "game.hpp"
 #include "math.h"
+#include "pulse/text.hpp"
 #include <format>
 #include <print>
 #include <string>
-#include <allegro5/allegro_font.h>
 
 Game::~Game() {
   delete player;
@@ -18,9 +18,12 @@ int Game::entryPoint() {
   return Engine::run();
 }
 
-void Game::displayScore() const {
-  std::string frmt = std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level), std::to_string(lives), std::to_string(score));
-  al_draw_text(font, al_map_rgb(255.0f, 255.0f, 255.f), 10.0f, 10.0f, 0, frmt.c_str());
+void Game::displayScoreboard() const {
+  std::string body =
+      std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level),
+                  std::to_string(lives), std::to_string(score));
+  Pulse::Text scoreboard = Pulse::Text(body.c_str(), font);
+  scoreboard.draw();
 }
 
 void Game::setupGame() {
@@ -46,7 +49,7 @@ void Game::move(double dt) {
 }
 
 void Game::render() const {
-  displayScore();
+  displayScoreboard();
   bricks->draw();
   ball->draw();
   player->draw();
