@@ -28,7 +28,7 @@ void Game::displayScoreboard() const {
 
 void Game::setupGame() {
   Engine::setupGame();
-  window->title = "Breakout CPP";
+  window->title = "Breakout C++";
 
   bricks = new Bricks(window);
   bricks->loadLevel(level);
