@@ -34,7 +34,7 @@ void Ball::detectPlayer() {
   // The ball must be moving south
   if (dy == 1) {
     float posX = dx == 1 ? pos->x + dim->r : pos->x - dim->r;
-    float posY = pos->y + dim->r;
+    float posY = pos->y + dim->r*2;
 
     if (isPlayerCollision(player, posX, posY)) {
       dy = -1;
@@ -55,8 +55,8 @@ void Ball::detectBricks() {
     float posY = dy == 1 ? pos->y + dim->r : pos->y - dim->r;
 
     if (isBrickCollision(brick, posX, posY)) {
-      *score += 10;
       dy *= -1;
+      *score += 10;
       brick->kill();
       break;
     }

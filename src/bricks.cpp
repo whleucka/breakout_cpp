@@ -9,7 +9,7 @@ void Bricks::loadLevel(int level) {
   // TODO: load levels from files
   float width = 40.0f, height = 15.0f;
   float startPosX = 0.0f, startPosY = 40.0f;
-  int level_mod = floor(10 * level * 0.25);
+  int level_mod = floor(10 * level * 0.5);
 
   int columns = floor(window->width / width);
   int rows = std::min(30, level_mod);
