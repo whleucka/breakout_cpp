@@ -47,14 +47,14 @@ void Engine::init() {
   al_register_event_source(queue, al_get_timer_event_source(timer));
 }
 
-void Engine::checkInit(bool test, std::string description) {
+void Engine::checkInit(bool test, std::string description) const {
   if (!test) {
     std::println("Failed to initialze {}", description);
     std::exit(1);
   }
 }
 
-void Engine::draw() {
+void Engine::draw() const {
   al_clear_to_color(al_map_rgb(0, 0, 0));
 
   render();

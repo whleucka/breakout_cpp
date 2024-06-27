@@ -13,7 +13,7 @@ Quad::~Quad() {
   delete dim;
 }
 
-void Quad::draw() {
+void Quad::draw() const {
   if (solid) {
     al_draw_filled_rectangle(
         pos->x, pos->y, pos->x + dim->w, pos->y + dim->h,

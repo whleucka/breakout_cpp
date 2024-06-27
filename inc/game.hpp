@@ -21,16 +21,16 @@ private:
   Ball *ball;
   Bricks *bricks;
 
-  std::string formatScore();
+  std::string formatScore() const;
   void nextLevel();
   bool checkEndLevel(const std::vector<Brick *> &bricks);
-  void displayScore();
+  void displayScore() const;
 
   void setupGame() override;
   void gameOver() override;
 
   void move(double dt) override;
-  void render() override;
+  void render() const override;
 
   void tick() override;
   void keydown(int type) override;

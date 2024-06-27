@@ -9,7 +9,7 @@ public:
   ~Bricks();
   void loadLevel(int level);
   std::vector<Brick* > getBricks() { return bricks; }
-  void draw();
+  void draw() const;
   bool cleared();
 
 private:

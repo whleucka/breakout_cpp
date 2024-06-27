@@ -1,11 +1,9 @@
 #include "bricks.hpp"
 #include <math.h>
 
-Bricks::Bricks(Window *window): window(window)
-{}
+Bricks::Bricks(Window *window) : window(window) {}
 
-Bricks::~Bricks()
-{}
+Bricks::~Bricks() {}
 
 void Bricks::loadLevel(int level) {
   // TODO: load levels from files
@@ -25,16 +23,14 @@ void Bricks::loadLevel(int level) {
   }
 }
 
-void Bricks::draw()
-{
+void Bricks::draw() const {
   for (auto brick : bricks) {
     if (brick->isAlive())
       brick->draw();
   }
 }
 
-bool Bricks::cleared()
-{
+bool Bricks::cleared() {
   int bricksExist = 0;
   for (auto brick : bricks) {
     if (brick->isAlive()) {

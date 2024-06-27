@@ -13,7 +13,7 @@ Circle::~Circle() {
   delete dim;
 }
 
-void Circle::draw() {
+void Circle::draw() const {
   al_draw_filled_circle(
       pos->x, pos->y, dim->r,
       al_map_rgba_f(colour->r, colour->g, colour->b, colour->a));

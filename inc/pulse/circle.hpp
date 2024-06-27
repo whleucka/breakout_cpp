@@ -8,7 +8,7 @@ namespace Pulse {
     Circle(float posX, float posY, float radius, float red, float green,
            float blue, float alpha);
     virtual ~Circle();
-    virtual void draw();
+    virtual void draw() const;
     Pos *pos;
     Dim *dim;
     Colour *colour;

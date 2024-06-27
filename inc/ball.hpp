@@ -1,5 +1,6 @@
 #pragma once
 
+#include "brick.hpp"
 #include "bricks.hpp"
 #include "player.hpp"
 #include "pulse/circle.hpp"
@@ -17,11 +18,13 @@ public:
 
 private:
   const Window *window;
-  const Player *player;
+  Player *player;
   Bricks *bricks;
   void detectWalls();
   void detectPlayer();
   void detectBricks();
+  bool isBrickCollision(Brick *brick, float posX, float posY) const;
+  bool isPlayerCollision(Player *player, float posX, float posY) const;
   float speed;
   int dx, dy;
   unsigned int *score;

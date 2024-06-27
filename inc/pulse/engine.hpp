@@ -37,7 +37,7 @@ protected:
 
   // Move and rendering
   virtual void move(double /*dt*/) {};
-  virtual void render() {};
+  virtual void render() const {};
 
   // Game state methods
   virtual void loading() {};
@@ -46,8 +46,8 @@ protected:
 
 private:
   int state;
-  void checkInit(bool test, std::string description);
+  void checkInit(bool test, std::string description) const;
   void loop();
-  void draw();
+  void draw() const;
 };
 } // namespace Pulse

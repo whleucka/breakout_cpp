@@ -16,7 +16,7 @@ int Game::entryPoint() {
   return Engine::run();
 }
 
-void Game::displayScore() {
+void Game::displayScore() const {
   al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0,
                formatScore().c_str());
 }
@@ -35,7 +35,7 @@ void Game::setupGame() {
                255.0f, 255.0f, 255.0f, 1.0f, window, player, bricks, &score);
 }
 
-std::string Game::formatScore() {
+std::string Game::formatScore() const {
   return std::format("Level: {} : Lives: {}, Score: {}", std::to_string(level),
                      std::to_string(lives), std::to_string(score));
 }
@@ -48,7 +48,7 @@ void Game::move(double dt) {
   player->move(dt);
 }
 
-void Game::render() {
+void Game::render() const {
   displayScore();
 
 

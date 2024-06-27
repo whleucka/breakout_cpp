@@ -4,8 +4,9 @@
 Ball::Ball(float posX, float posY, float radius, float red, float green,
            float blue, float alpha, Window *window, Player *player,
            Bricks *bricks, unsigned int *score)
-  : Pulse::Circle(posX, posY, radius, red, green, blue, alpha),
-  window(window), player(player), bricks(bricks), score(score), alive(true) {
+    : Pulse::Circle(posX, posY, radius, red, green, blue, alpha),
+      window(window), player(player), bricks(bricks), score(score),
+      alive(true) {
   speed = 300.0f;
   dx = 1;
   dy = -1;
@@ -33,12 +34,17 @@ void Ball::detectPlayer() {
   // The ball must be moving south
   if (dy == 1) {
     float posX = dx == 1 ? pos->x + dim->r : pos->x - dim->r;
-    if (posX >= player->pos->x && posX <= player->pos->x + player->dim->w) {
-      if (pos->y + dim->r >= player->pos->y) {
+    float posY = pos->y + dim->r;
+
+    if (isPlayerCollision(player, posX, posY)) {
         dy = -1;
-      }
     }
   }
+}
+
+bool Ball::isPlayerCollision(Player *player, float posX, float posY) const {
+  return (posX >= player->pos->x && posX <= player->pos->x + player->dim->w &&
+          posY >= player->pos->y);
 }
 
 void Ball::detectBricks() {
@@ -47,18 +53,24 @@ void Ball::detectBricks() {
       continue;
     float posX = dx == 1 ? pos->x + dim->r : pos->x - dim->r;
     float posY = dy == 1 ? pos->y + dim->r : pos->y - dim->r;
-    if (posX >= brick->pos->x && posX <= brick->pos->x + brick->dim->w) {
-      if (posY >= brick->pos->y && posY <= brick->pos->y + brick->dim->h) {
-        *score += 10;
-        dy *= -1;
-        brick->kill();
-      }
+
+    if (isBrickCollision(brick, posX, posY)) {
+      *score += 10;
+      dy *= -1;
+      brick->kill();
+      break;
     }
   }
 }
 
+bool Ball::isBrickCollision(Brick *brick, float posX, float posY) const {
+  return (posX >= brick->pos->x && posX <= brick->pos->x + brick->dim->w &&
+          posY >= brick->pos->y && posY <= brick->pos->y + brick->dim->h);
+}
+
 void Ball::move(double dt) {
-  if (!isAlive()) return;
+  if (!isAlive())
+    return;
   detectWalls();
   detectBricks();
   detectPlayer();
